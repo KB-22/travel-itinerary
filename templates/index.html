@@ -4,35 +4,50 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Travel Itinerary</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 <body>
     <h1>Travel Itinerary</h1>
-    <button onclick="fetchPlaces()">Load Places</button>
-    <ul id="places"></ul>
+
+    <!-- Search for District -->
+    <input type="text" id="district-input" placeholder="Enter district name">
+    <button onclick="loadPlaces()">Search Places</button>
+
+    <!-- Display Places -->
+    <ul id="places-list"></ul>
+
+    <hr>
+
+    <!-- Form to Add a New Place -->
+    <h2>Add an Unexplored Place</h2>
+    <input type="text" id="place-name" placeholder="Place Name">
+    <input type="text" id="place-desc" placeholder="Short Description">
+    <input type="text" id="place-district" placeholder="District Name">
+    <button onclick="addPlace()">Add Place</button>
 
     <script>
-        function fetchPlaces() {
-            fetch('/places')
+        function loadPlaces() {
+            let district = document.getElementById("district-input").value;
+            fetch(`/places?district=${district}`)
                 .then(response => response.json())
                 .then(data => {
-                    let placesList = document.getElementById('places');
-                    placesList.innerHTML = '';
+                    let placesList = document.getElementById("places-list");
+                    placesList.innerHTML = "";
+
                     data.forEach(place => {
-                        let item = document.createElement('li');
-                        item.innerHTML = `${place.name} (Visits: ${place.visit_count}) <button onclick="increaseCount(${place.id})">Visit</button>`;
-                        placesList.appendChild(item);
+                        let listItem = document.createElement("li");
+                        listItem.innerText = `${place.name} (Visits: ${place.visit_count}) - ${place.description}`;
+                        placesList.appendChild(listItem);
                     });
-                });
+                })
+                .catch(error => console.error("Error loading places:", error));
         }
 
-        function increaseCount(id) {
-            fetch('/increase_visit_count', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ place_id: id })
-            }).then(response => response.json()).then(() => fetchPlaces());
-        }
-    </script>
-</body>
-</html>
+        function addPlace() {
+            let name = document.getElementById("place-name").value;
+            let description = document.getElementById("place-desc").value;
+            let district = document.getElementById("place-district").value;
+
+            fetch('/add_place', {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ name, description, district }
