@@ -7,7 +7,7 @@ app = Flask(__name__)
 CORS(app)
 
 # ✅ Define the database URL as a variable
-DATABASE_URL = os.getenv('DATABASE_URL', 'postgresql://trip_planner_user:password@host:port/trip_planner')
+DATABASE_URL = os.getenv('DATABASE_URL', 'postgresql://renderdb_tkpw_user:kgyb4KrE32MydGYXtaUcbw7Yl38CG9nv@dpg-cv40aud2ng1s73dbua6g-a/renderdb_tkpw')
 
 # ✅ Configure SQLAlchemy with the database URL
 app.config['SQLALCHEMY_DATABASE_URI'] = DATABASE_URL
@@ -45,7 +45,7 @@ def add_place():
 @app.route('/places/<district>', methods=['GET'])
 def get_places(district):
     places = Place.query.filter_by(district=district).order_by(Place.visit_count.desc()).all()
-    return jsonify([{"id": p.id, "name": p.name, "description": p.description, "visit_count": p.visit_count} for p in places])
+    return jsonify([{ "id": p.id, "name": p.name, "description": p.description, "visit_count": p.visit_count} for p in places])
 
 # ✅ Route for increasing visit count of a place
 @app.route('/visit/<int:place_id>', methods=['POST'])
