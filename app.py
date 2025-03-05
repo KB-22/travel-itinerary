@@ -7,7 +7,7 @@ app = Flask(__name__)
 CORS(app)
 
 # ✅ Define the database URL as a variable
-DATABASE_URL = os.getenv('DATABASE_URL', 'postgresql://renderdb_tkpw_user:kgyb4KrE32MydGYXtaUcbw7Yl38CG9nv@dpg-cv40aud2ng1s73dbua6g-a/renderdb_tkpw')
+DATABASE_URL = 'postgresql://renderdb_tkpw_user:kgyb4KrE32MydGYXtaUcbw7Yl38CG9nv@dpg-cv40aud2ng1s73dbua6g-a/renderdb_tkpw'
 
 # ✅ Configure SQLAlchemy with the database URL
 app.config['SQLALCHEMY_DATABASE_URI'] = DATABASE_URL
@@ -27,11 +27,9 @@ class Place(db.Model):
 with app.app_context():
     db.create_all()
 
-
 @app.route('/')
 def home():
     return "Welcome to the Travel Itinerary API!"
-    
 
 # ✅ Route for adding a new place
 @app.route('/add_place', methods=['POST'])
@@ -65,4 +63,4 @@ def increase_visit(place_id):
 
 # ✅ Start the Flask app
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(host='0.0.0.0', port=10000, debug=True)
