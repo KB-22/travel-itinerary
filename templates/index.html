@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Travel Itinerary</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <h1>Travel Itinerary</h1>
+    <button onclick="fetchPlaces()">Load Places</button>
+    <ul id="places"></ul>
+
+    <script>
+        function fetchPlaces() {
+            fetch('/places')
+                .then(response => response.json())
+                .then(data => {
+                    let placesList = document.getElementById('places');
+                    placesList.innerHTML = '';
+                    data.forEach(place => {
+                        let item = document.createElement('li');
+                        item.innerHTML = `${place.name} (Visits: ${place.visit_count}) <button onclick="increaseCount(${place.id})">Visit</button>`;
+                        placesList.appendChild(item);
+                    });
+                });
+        }
+
+        function increaseCount(id) {
+            fetch('/increase_visit_count', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ place_id: id })
+            }).then(response => response.json()).then(() => fetchPlaces());
+        }
+    </script>
+</body>
+</html>
