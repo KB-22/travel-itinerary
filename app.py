@@ -27,9 +27,7 @@ class Place(db.Model):
 with app.app_context():
     db.create_all()
 
-@app.route('/')
-def home():
-    return "Welcome to the Travel Itinerary API!"
+
 
 # ✅ Route for adding a new place
 @app.route('/add_place', methods=['POST'])
